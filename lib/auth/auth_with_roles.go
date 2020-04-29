@@ -854,17 +854,17 @@ func (a *AuthWithRoles) Ping(ctx context.Context) (proto.PingResponse, error) {
 	}, nil
 }
 
-// withUpdateBy creates a child context with the AccessRequestUpdateBy
-// value set.  Expected by AuthServer.SetAccessRequestState.
+// withUpdateBy creates a child context with the updated_by value set.
+// Helps capture the user who modified a resource.
 func withUpdateBy(ctx context.Context, user string) context.Context {
-	return context.WithValue(ctx, events.AccessRequestUpdateBy, user)
+	return context.WithValue(ctx, events.UpdatedBy, user)
 }
 
-// getUpdateBy attempts to load the context value AccessRequestUpdateBy.
+// getUpdateBy attempts to load the context value updated_by.
 func getUpdateBy(ctx context.Context) (string, error) {
-	updateBy, ok := ctx.Value(events.AccessRequestUpdateBy).(string)
+	updateBy, ok := ctx.Value(events.UpdatedBy).(string)
 	if !ok || updateBy == "" {
-		return "", trace.BadParameter("missing value %q", events.AccessRequestUpdateBy)
+		return "", trace.BadParameter("missing value %q", events.UpdatedBy)
 	}
 	return updateBy, nil
 }
